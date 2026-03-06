@@ -6,7 +6,7 @@
 		<title>ToDo</title>
 	</head>
 	<body>
-		<header>
+		<header class="header">
 			<h1>My ToDo List</h1>
 		</header>
 
@@ -16,21 +16,87 @@
 				<ul>
 					<li class="sidebar-item">
 						<span class="sidebar-icon"></span>
-						<span class="sidebar-name"></span>
-						<span class="sidebar-quantity"></span>
+						<span class="sidebar-name">Default</span>
+						<span class="sidebar-quantity">3</span>
 					</li>
 					<li class="sidebar-item">
 						<span class="sidebar-icon"></span>
-						<span class="sidebar-name"></span>
-						<span class="sidebar-quantity"></span>
+						<span class="sidebar-name">Work</span>
+						<span class="sidebar-quantity">5</span>
 					</li>
 					<li class="sidebar-item">
 						<span class="sidebar-icon"></span>
-						<span class="sidebar-name"></span>
-						<span class="sidebar-quantity"></span>
+						<span class="sidebar-name">Personal</span>
+						<span class="sidebar-quantity">2</span>
 					</li>
 				</ul>
+
+				<button class="add-project-btn">+ New Project</button>
 			</nav>
 		</aside>
+
+		<main>
+			<div class="main-headline">
+				<h2>Default</h2>
+				<button class="add-task-btn">+ Add Task</button>
+			</div>
+
+			<form class="add-task-form">
+				<div class="input-cont">
+					<label for="task-title">Task title</label>
+					<input type="text" name="task-title" id="task-title" placeholder="Task title">
+				</div>
+
+				<div class="input-cont">
+					<label for="task-description">Task description</label>
+					<textarea 
+						name="task-description" 
+						id="task-description" 
+						placeholder="Description (optional)"
+					></textarea>
+				</div>
+
+				<div class="input-row">
+					<div class="input-cont">
+						<label for="due-date">Due Date</label>
+						<input type="date" name="due-date" id="due-date">
+					</div>
+
+					<div class="input-cont">
+						<label for="priority">Priority</label>
+						<select name="priority" id="priority">
+							<option selected value="low">Low</option>
+							<option value="medium">Medium</option>
+							<option value="high">High</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-buttons">
+					<button type="submit" class="submit-btn">Add</button>
+					<button class="cancel-btn">Cancel</button>
+				</div>
+			</form>
+
+			<section class="tasks-container">
+				<div class="task">
+					<div class="task-left">
+						<input type="checkbox">
+						<div class="task-info">
+							<p class="task-info-title">Buy Groceries</p>
+							<p class="task-info-decsription">Milk, Eggs, Bread</p>
+						</div>
+					</div>
+
+					<div class="task-left">
+						<p class="task-date">2026-03-10</p>
+						<p class="task-priority">Low</p>
+
+						<button class="task-edit">&#9998;</button>
+						<button class="task-delete">&times;</button>
+					</div>
+				</div>
+			</section>
+		</main>
 	</body>
 </html>
