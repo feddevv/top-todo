@@ -26,11 +26,22 @@ body {
     min-height: 100vh;
 
     display: grid;
-    grid-template: 50px 1fr / 1fr 6fr;
+    grid-template: 65px 1fr / 1fr 6fr;
 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .header {
     grid-column: 1 / 3;
+
+    background-color: var(--header-background);
+    display: flex;
+    align-items: center;
+}
+
+.header h1 {
+    color: var(--header-sidebar-text);
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-left: 1.3rem;
 }
