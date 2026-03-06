@@ -177,16 +177,23 @@ main {
     color: var(--bg-primary);
 }
 
-.add-task-btn {
-    background-color: var(--bg-primary);
-    color: var(--text-light);
+.btn {
+    --_bg-btn: var(--bg-btn);
+    --_text-btn: var(--text-btn);
+    background-color: var(--_bg-btn);
+    color: var(--_text-btn);
+
     border: none;
     font-size: 1rem;
     padding: .6rem 1rem;
     border-radius: .4rem;
-
     cursor: pointer;
     transition: background-color .2s;
+}
+
+.add-task-btn {
+    --bg-btn: var(--bg-primary);
+    --text-btn: var(--text-light);
 }
 
 .add-task-btn:hover {
@@ -239,31 +246,22 @@ main {
     margin-left: auto;
 }
 
-.submit-btn, .cancel-btn {
-    border: none;
-    cursor: pointer;
-    padding: .5rem 1.1rem;
-    border-radius: .3rem;
-    font-size: .9rem;
-    margin-left: .4rem;
-    transition: background-color .2s;
-}
-
 .submit-btn {
-    background-color: var(--submit-bg);
-    color: var(--bg-page);
+    --bg-btn: var(--submit-bg);
+    --text-btn: var(--bg-page);
 }
 
 .submit-btn:hover {
-    background-color: var(--submit-hover);
+    --bg-btn: var(--submit-hover);
 }
 
 .submit-btn:active {
-    background-color: var(--submit-active);
+    --bg-btn: var(--submit-active);
 }
 
 .cancel-btn {
-    color: var(--bg-primary);
-
-    background-color: var(--bg-page);
+    --bg-btn: var(--bg-page);
+    --text-btn: var(--bg-primary);
+    margin-left: .4rem;
 }
+
