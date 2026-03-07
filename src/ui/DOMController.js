@@ -13,7 +13,7 @@ export const DOMController = (function() {
         select.innerHTML = '<option selected value="default">Default</option>'
 
         projects.forEach(el => {
-            const option = createElement('options', {value: el.id, textContent: el.name})
+            const option = createElement('option', {value: el.id, textContent: el.name})
 
             select.appendChild(option)
         })
@@ -41,10 +41,38 @@ export const DOMController = (function() {
         })
     }
 
+    function renderTasks(tasks) {
+        const tasksContainer = document.querySelector('.tasks-container')
+
+        tasks.forEach(el => {
+            const task = createElement('div', {className: `task ${el.priority.toLowerCase()}`})
+
+            const taskLeft = createElement('div', {className: 'task-left'})
+            const checkBoxLeft = createElement('input', {type: 'checkbox'})
+            const taskInfoLeft = createElement('div', {className: 'task-info'})
+            const title = createElement('p', {className: 'task-info-title', textContent: el.title})
+            const description = createElement('p', {className: 'task-info-description', textContent: el.description})
+            taskInfoLeft.append(title, description)
+            taskLeft.append(checkBoxLeft, taskInfoLeft)
+
+            const taskRight = createElement('div', {className: 'task-right'})
+            const date = createElement('p', {className: 'task-date', textContent: el.dueDate})
+            const priority = createElement('p', {className: `task-priority ${el.priority.toLowerCase()}`, textContent: el.priority})
+            const editBtn = createElement('button', {className: 'task-edit', textContent: String.fromCharCode(9998)})
+            const deleteBtn = createElement('button', {className: 'task-delete', textContent: String.fromCharCode(215)})
+
+            taskRight.append(date, priority, editBtn, deleteBtn)
+
+            task.append(taskLeft, taskRight)
+            tasksContainer.appendChild(task)
+        })
+    }
+
     return {
         initEventListeners,
         renderSelectProjects,
         renderProjects,
+        renderTasks
     }
 }) ()
 
