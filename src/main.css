@@ -382,3 +382,6 @@ main {
     background-color: #fdedec;
 }
 
+.hidden {
+    display: none;
+}

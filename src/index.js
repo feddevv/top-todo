@@ -2,6 +2,7 @@ import './main.css'
 import { ProjectManager } from './modules/ProjectManager.js'
 import Project from './modules/Project.js';
 import Task from './modules/Task.js';
+import { DOMController } from './ui/DOMController.js';
 
 function addSeedData(manager) {
     const project = new Project('DNU')
@@ -19,3 +20,5 @@ function addSeedData(manager) {
 addSeedData(ProjectManager)
 
 console.log(ProjectManager.getProjects())
+
+DOMController.initEventListeners()
