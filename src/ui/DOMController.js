@@ -8,7 +8,7 @@ export const DOMController = (function() {
         })
     }
 
-    function renderSelectProject(projects) {
+    function renderSelectProjects(projects) {
         const select = document.getElementById('select-project')
         select.innerHTML = '<option selected value="default">Default</option>'
 
@@ -21,8 +21,38 @@ export const DOMController = (function() {
         })
     }
 
+    function renderProjects(projects) {
+        const ul = document.querySelector('.sidebar nav ul')
+        ul.innerHTML = `<li class="sidebar-item" tabindex="0">
+						<span class="sidebar-icon"></span>
+						<span class="sidebar-name">Default</span>
+						<span class="sidebar-quantity">3</span>
+					</li>`
+
+        projects.forEach(el => {
+            const li = document.createElement('li')
+            li.className = 'sidebar-item'
+            li.tabIndex = 0
+
+            const icon = document.createElement('span')
+            icon.className = 'sidebar-icon'
+
+            const name = document.createElement('span')
+            name.className = 'sidebar-name'
+            name.textContent = el.name
+
+            const quantity = document.createElement('span')
+            quantity.className = 'sidebar-quantity'
+            quantity.textContent = el.tasks.length
+
+            li.append(icon, name, quantity)
+            ul.appendChild(li)
+        })
+    }
+
     return {
         initEventListeners,
-        renderSelectProject
+        renderSelectProjects,
+        renderProjects,
     }
 }) ()

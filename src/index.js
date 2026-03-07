@@ -22,3 +22,4 @@ addSeedData(ProjectManager)
 console.log(ProjectManager.getProjects())
 
 DOMController.initEventListeners()
+DOMController.renderProjects(ProjectManager.getProjects())
