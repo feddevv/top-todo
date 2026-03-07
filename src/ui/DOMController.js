@@ -8,7 +8,21 @@ export const DOMController = (function() {
         })
     }
 
+    function renderSelectProject(projects) {
+        const select = document.getElementById('select-project')
+        select.innerHTML = '<option selected value="default">Default</option>'
+
+        projects.forEach(el => {
+            const option = document.createElement('option')
+            option.value = el.id
+            option.textContent = el.name
+
+            select.appendChild(option)
+        })
+    }
+
     return {
         initEventListeners,
+        renderSelectProject
     }
 }) ()
