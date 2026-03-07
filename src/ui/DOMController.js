@@ -13,9 +13,7 @@ export const DOMController = (function() {
         select.innerHTML = '<option selected value="default">Default</option>'
 
         projects.forEach(el => {
-            const option = document.createElement('option')
-            option.value = el.id
-            option.textContent = el.name
+            const option = createElement('options', {value: el.id, textContent: el.name})
 
             select.appendChild(option)
         })
@@ -30,20 +28,13 @@ export const DOMController = (function() {
 					</li>`
 
         projects.forEach(el => {
-            const li = document.createElement('li')
-            li.className = 'sidebar-item'
-            li.tabIndex = 0
+            const li = createElement('li', {className: 'sidebar-item', tabIndex: 0})
 
-            const icon = document.createElement('span')
-            icon.className = 'sidebar-icon'
+            const icon = createElement('span', {className: 'sidebar-icon'})
 
-            const name = document.createElement('span')
-            name.className = 'sidebar-name'
-            name.textContent = el.name
+            const name = createElement('span', {className: 'sidebar-name', textContent: el.name})
 
-            const quantity = document.createElement('span')
-            quantity.className = 'sidebar-quantity'
-            quantity.textContent = el.tasks.length
+            const quantity = createElement('span', {className: 'sidebar-quantity', textContent: el.tasks.length})
 
             li.append(icon, name, quantity)
             ul.appendChild(li)
@@ -56,3 +47,13 @@ export const DOMController = (function() {
         renderProjects,
     }
 }) ()
+
+function createElement(tag, ...args) {
+    const element = document.createElement(tag)
+
+    for (const [key, value] of Object.entries(...args)) {
+        element[key] = value
+    }
+
+    return element
+}
