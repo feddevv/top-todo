@@ -17,8 +17,6 @@ export default class Project {
                 return true
             }
         })
-
-        return false
     }
 
     get tasks() {
