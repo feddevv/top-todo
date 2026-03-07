@@ -23,8 +23,3 @@ console.log(ProjectManager.getProjects())
 
 DOMController.initEventListeners()
 DOMController.renderProjects(ProjectManager.getProjects())
-DOMController.renderTasks([
-    new Task("Лаба з C++", "Реалізувати паттерн Singleton", "2026-03-12", "High"),
-    new Task("Вивчити Git", "Розібратися з merge conflicts", "2026-03-10", "Medium"),
-    new Task("Переглянути лекцію", "Тема: Web Components", "2026-03-09", "Low")
-])

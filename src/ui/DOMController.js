@@ -28,7 +28,7 @@ export const DOMController = (function() {
 					</li>`
 
         projects.forEach(el => {
-            const li = createElement('li', {className: 'sidebar-item', tabIndex: 0})
+            const li = createElement('li', {className: 'sidebar-item', tabIndex: 0, 'data-project-id': el.id})
 
             const icon = createElement('span', {className: 'sidebar-icon'})
 
@@ -76,11 +76,16 @@ export const DOMController = (function() {
     }
 }) ()
 
-function createElement(tag, ...args) {
+function createElement(tag, props = {}) {
     const element = document.createElement(tag)
 
-    for (const [key, value] of Object.entries(...args)) {
-        element[key] = value
+    for (const [key, value] of Object.entries(props)) {
+        if (key.startsWith('data-')) {
+            element.setAttribute(key, value)
+        }
+        else {
+            element[key] = value
+        }
     }
 
     return element
