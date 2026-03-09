@@ -178,17 +178,27 @@ export const DOMController = (function() {
         projects.forEach(el => {
             const li = createElement('li', {className: 'sidebar-item', tabIndex: 0, 'data-project-id': el.id})
 
-            const icon = createElement('span', {className: 'sidebar-icon', textContent: '\u2715'})
+            let icon
+            if (el.id !== 'default') {
+                icon = createElement('span', {className: 'sidebar-icon', textContent: '\u2715'})
+                icon.addEventListener('click', (e) => {
+                    e.stopPropagation()
+                    
+                    ProjectManager.deleteProject(el.id)
+                    if (currentProjectId === el.id) renderAllTasks(ProjectManager.getProjects())
+                    renderProjects(ProjectManager.getProjects())
+                })
+            }
 
             const name = createElement('span', {className: 'sidebar-name', textContent: el.name})
 
-            let quantity;
-            if (el.id === 'default') {
-                quantity = createElement('span', {className: 'sidebar-quantity', textContent: wholeQuantity})
-            }
-            else quantity = createElement('span', {className: 'sidebar-quantity', textContent: el.tasks.length})
+            const quantity = el.id === 'default' 
+                ? createElement('span', {className: 'sidebar-quantity', textContent: wholeQuantity})
+                : createElement('span', {className: 'sidebar-quantity', textContent: el.tasks.length})
 
-            li.append(quantity, name, icon)
+            const append = [quantity, name]
+            if (icon) append.push(icon)
+            li.append(...append)
             ul.appendChild(li)
         })
     }
