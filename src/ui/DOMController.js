@@ -6,18 +6,9 @@ import Project from "../modules/Project.js"
 export const DOMController = (function() {
     let currentProjectId = 'default'
 
-    function initEventListeners() {
-        const addTask = document.querySelector('.add-task-btn')
-        const sidebarUl = document.querySelector('.sidebar nav ul')
-        const submitTaskForm = document.querySelector('.add-task-form')
-        const cancelTaskBtn = document.querySelector('.add-task-form .cancel-btn')
-        const addProjectBtn = document.querySelector('.add-project-btn')
-        const newProjectDialog = document.querySelector('.new-project-dialog')
-        const dialogCancelBtn = document.querySelector('.dialog-cancel-btn')
-        const newProjectForm = document.querySelector('.new-project-form')
+    // Task listeners
+    function initTasksListeners() {
         const tasksContainer = document.querySelector('.tasks-container')
-        const dialogEdit = document.getElementById('dialog-task-edit')
-        const formEdit = document.querySelector('#dialog-task-edit form')
         const dialogDetail = document.getElementById('dialog-task-detail')
 
         tasksContainer.addEventListener('change', (e) => {
@@ -31,6 +22,31 @@ export const DOMController = (function() {
             }
         })
 
+        tasksContainer.addEventListener('click', (e) => {
+            const taskEl = e.target.closest('.task')
+            if (!taskEl || e.target.closest('.task-edit') || e.target.closest('.task-delete') 
+                || e.target.closest('input[type="checkbox"]')) return
+
+            const project = ProjectManager.getProject(taskEl.dataset.projectId)
+            const task = project.getTask(taskEl.dataset.taskId)
+
+            dialogDetail.querySelector('.task-dialog-title').textContent = task.title
+            const priorityEl = dialogDetail.querySelector('.task-priority')
+            priorityEl.textContent = task.priority
+            priorityEl.className = `task-priority ${task.priority.toLowerCase()}`
+            dialogDetail.querySelector('.task-dialog-description').textContent = task.description || 'No description'
+            dialogDetail.querySelector('#detail-due-date').textContent = task.dueDate || 'Not set'
+            dialogDetail.querySelector('#detail-project').textContent = project.name
+
+            dialogDetail.showModal()
+        })
+    }
+
+    function initTaskEditListeners() {
+        const dialogEdit = document.getElementById('dialog-task-edit')
+        const formEdit = document.querySelector('#dialog-task-edit form')
+        const tasksContainer = document.querySelector('.tasks-container')
+        
         tasksContainer.addEventListener('click', (e) => {
             const targetTask = e.target.closest('.task')
             if (e.target.matches('.task-edit') && targetTask) {
@@ -62,24 +78,6 @@ export const DOMController = (function() {
             }
         })
 
-        tasksContainer.addEventListener('click', (e) => {
-            const taskEl = e.target.closest('.task')
-            if (!taskEl || e.target.closest('.task-edit') || e.target.closest('.task-delete') || e.target.closest('input[type="checkbox"]')) return
-
-            const project = ProjectManager.getProject(taskEl.dataset.projectId)
-            const task = project.getTask(taskEl.dataset.taskId)
-
-            dialogDetail.querySelector('.task-dialog-title').textContent = task.title
-            const priorityEl = dialogDetail.querySelector('.task-priority')
-            priorityEl.textContent = task.priority
-            priorityEl.className = `task-priority ${task.priority.toLowerCase()}`
-            dialogDetail.querySelector('.task-dialog-description').textContent = task.description || 'No description'
-            dialogDetail.querySelector('#detail-due-date').textContent = task.dueDate || 'Not set'
-            dialogDetail.querySelector('#detail-project').textContent = project.name
-
-            dialogDetail.showModal()
-        })
-
         formEdit.addEventListener('submit', (e) => {
             const data = Object.fromEntries(new FormData(e.target))
             const taskId = dialogEdit.dataset.taskId
@@ -96,12 +94,65 @@ export const DOMController = (function() {
 
             renderTasks(project.tasks)
         })
+    }
 
+    function initCreateTaskListeners() {
+        const addTask = document.querySelector('.add-task-btn')
+        const submitTaskForm = document.querySelector('.add-task-form')
+        const cancelTaskBtn = document.querySelector('.add-task-form .cancel-btn')
 
         addTask.addEventListener('click', (e) => {
-            const form = document.querySelector('.add-task-form')
-            form.classList.toggle('hidden')
+            submitTaskForm.classList.toggle('hidden')
             renderSelectProjects(ProjectManager.getProjects())
+        })
+
+        submitTaskForm.addEventListener('submit', (e) => {
+            e.preventDefault()
+
+            const data = Object.fromEntries(new FormData(e.target))
+            const project = ProjectManager.getProject(data.project)
+            project.addTask(new Task(data['task-title'], data['task-description'], data['due-date'], data.priority, project.id))
+            // If this is the default project, render everything
+            if (currentProjectId === 'default') {
+                renderAllTasks(ProjectManager.getProjects())
+            }
+            else {
+                const currentProject = ProjectManager.getProject(currentProjectId)
+                renderTasks(currentProject.tasks)
+            }
+
+            renderProjects(ProjectManager.getProjects())
+        })
+
+        cancelTaskBtn.addEventListener('click', (e) => {
+            submitTaskForm.reset()
+            submitTaskForm.classList.add('hidden')
+        })
+    }
+
+    function initProjectListeners() {
+        const addProjectBtn = document.querySelector('.add-project-btn')
+        const newProjectDialog = document.querySelector('.new-project-dialog')
+        const dialogCancelBtn = document.querySelector('.dialog-cancel-btn')
+        const newProjectForm = document.querySelector('.new-project-form')
+        const sidebarUl = document.querySelector('.sidebar nav ul')
+
+        addProjectBtn.addEventListener('click', () => {
+            newProjectDialog.showModal()
+        })
+
+        dialogCancelBtn.addEventListener('click', () => {
+            newProjectDialog.close()
+        })
+
+        newProjectForm.addEventListener('submit', (e) => {
+            const name = newProjectForm.querySelector('#project-name').value.trim()
+            if (!name) return
+
+            const project = new Project(name)
+            ProjectManager.addProject(project)
+            renderProjects(ProjectManager.getProjects())
+            newProjectForm.reset()
         })
 
         sidebarUl.addEventListener('click', (e) => {
@@ -125,48 +176,13 @@ export const DOMController = (function() {
 
             renderTasks(project.tasks)
         })
+    }
 
-        addProjectBtn.addEventListener('click', () => {
-            newProjectDialog.showModal()
-        })
-
-        dialogCancelBtn.addEventListener('click', () => {
-            newProjectDialog.close()
-        })
-
-        newProjectForm.addEventListener('submit', (e) => {
-            const name = newProjectForm.querySelector('#project-name').value.trim()
-            if (!name) return
-
-            const project = new Project(name)
-            ProjectManager.addProject(project)
-            renderProjects(ProjectManager.getProjects())
-            newProjectForm.reset()
-        })
-
-        submitTaskForm.addEventListener('submit', (e) => {
-            e.preventDefault()
-
-            const data = Object.fromEntries(new FormData(e.target))
-            const project = ProjectManager.getProject(data.project)
-            project.addTask(new Task(data['task-title'], data['task-description'], data['due-date'], data.priority, project.id))
-            // If this is the default project, render everything
-            if (currentProjectId === 'default') {
-                console.log(currentProjectId)
-                renderAllTasks(ProjectManager.getProjects())
-            }
-            else {
-                const currentProject = ProjectManager.getProject(currentProjectId)
-                renderTasks(currentProject.tasks)
-            }
-
-            renderProjects(ProjectManager.getProjects())
-        })
-
-        cancelTaskBtn.addEventListener('click', (e) => {
-            submitTaskForm.reset()
-            submitTaskForm.classList.add('hidden')
-        })
+    function initEventListeners() {
+        initTasksListeners()
+        initTaskEditListeners()
+        initProjectListeners()
+        initCreateTaskListeners()
     }
 
     function renderSelectProjects(projects) {
