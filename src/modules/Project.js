@@ -7,7 +7,7 @@ export default class Project {
     }
 
     addTask(task) {
-        this.#tasks.push(task)
+        this.#tasks.unshift(task)
     }
 
     deleteTask(taskId) {
