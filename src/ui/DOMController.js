@@ -85,7 +85,7 @@ export const DOMController = (function() {
 
             const data = Object.fromEntries(new FormData(e.target))
             const project = ProjectManager.getProject(data.project)
-            project.addTask(new Task(data['task-title'], data['task-description'], data['due-date'], data.priority))
+            project.addTask(new Task(data['task-title'], data['task-description'], data['due-date'], data.priority, project.id))
             // If this is the default project, render everything
             if (currentProjectId === 'default') {
                 console.log(currentProjectId)
