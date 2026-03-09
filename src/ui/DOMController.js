@@ -1,10 +1,29 @@
+import { ProjectManager } from "../modules/ProjectManager.js"
+
 export const DOMController = (function() {
     function initEventListeners() {
         const addTask = document.querySelector('.add-task-btn')
+        const sidebarUl = document.querySelector('.sidebar nav ul')
 
         addTask.addEventListener('click', (e) => {
             const form = document.querySelector('.add-task-form')
             form.classList.toggle('hidden')
+        })
+
+        sidebarUl.addEventListener('click', (e) => {
+            const li = e.target.closest('.sidebar-item')
+            if (!li) return
+
+            const projectId = li.dataset.projectId
+            if (projectId === 'default') {
+                const projects = ProjectManager.getProjects()
+                projects.forEach(el => renderTasks(el.tasks))
+
+                return
+            }
+
+            const project = ProjectManager.getProject(projectId)
+            renderTasks(project.tasks)
         })
     }
 
@@ -21,7 +40,7 @@ export const DOMController = (function() {
 
     function renderProjects(projects) {
         const ul = document.querySelector('.sidebar nav ul')
-        ul.innerHTML = `<li class="sidebar-item" tabindex="0">
+        ul.innerHTML = `<li data-project-id="default" class="sidebar-item" tabindex="0">
 						<span class="sidebar-icon"></span>
 						<span class="sidebar-name">Default</span>
 						<span class="sidebar-quantity">3</span>
@@ -43,6 +62,7 @@ export const DOMController = (function() {
 
     function renderTasks(tasks) {
         const tasksContainer = document.querySelector('.tasks-container')
+        tasksContainer.innerHTML = ''
 
         tasks.forEach(el => {
             const task = createElement('div', {className: `task ${el.priority.toLowerCase()}`})
