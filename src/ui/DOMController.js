@@ -17,6 +17,7 @@ export const DOMController = (function() {
         const tasksContainer = document.querySelector('.tasks-container')
         const dialogEdit = document.getElementById('dialog-task-edit')
         const formEdit = document.querySelector('#dialog-task-edit form')
+        const dialogDetail = document.getElementById('dialog-task-detail')
 
         tasksContainer.addEventListener('click', (e) => {
             const targetTask = e.target.closest('.task')
@@ -47,6 +48,24 @@ export const DOMController = (function() {
                 renderTasks(currentProject.tasks)
                 renderProjects(ProjectManager.getProjects())
             }
+        })
+
+        tasksContainer.addEventListener('click', (e) => {
+            const taskEl = e.target.closest('.task')
+            if (!taskEl || e.target.closest('.task-edit') || e.target.closest('.task-delete') || e.target.closest('input[type="checkbox"]')) return
+
+            const project = ProjectManager.getProject(taskEl.dataset.projectId)
+            const task = project.getTask(taskEl.dataset.taskId)
+
+            dialogDetail.querySelector('.task-dialog-title').textContent = task.title
+            const priorityEl = dialogDetail.querySelector('.task-priority')
+            priorityEl.textContent = task.priority
+            priorityEl.className = `task-priority ${task.priority.toLowerCase()}`
+            dialogDetail.querySelector('.task-dialog-description').textContent = task.description || 'No description'
+            dialogDetail.querySelector('#detail-due-date').textContent = task.dueDate || 'Not set'
+            dialogDetail.querySelector('#detail-project').textContent = project.name
+
+            dialogDetail.showModal()
         })
 
         formEdit.addEventListener('submit', (e) => {

@@ -79,8 +79,26 @@
 			<section class="tasks-container">
 				
 			</section>
+		</main>
 
-			<dialog id="dialog-task-edit">
+		<dialog id="dialog-task-detail" class="task-dialog">
+			<div>
+				<div class="task-dialog-header">
+					<h2 class="task-dialog-title"></h2>
+					<span class="task-priority"></span>
+				</div>
+				<p class="task-dialog-description"></p>
+				<div class="task-dialog-details">
+					<span class="task-dialog-label">Due Date:</span>
+					<span id="detail-due-date"></span>
+					<span class="task-dialog-label">Project:</span>
+					<span id="detail-project"></span>
+				</div>
+				<button class="btn cancel-btn task-dialog-close" commandfor="dialog-task-detail" command="close">Close</button>
+			</div>
+		</dialog>
+
+		<dialog id="dialog-task-edit">
 				<form method="dialog" id="edit-form">
 					<input type="text" name="task-edit-title" id="task-edit-title">
 					<textarea name="task-edit-description" id="task-edit-description"></textarea>
@@ -96,6 +114,5 @@
 				<button class="submit-btn btn" form="edit-form">Submit</button>
 				<button commandfor="dialog-task-edit" command="close" class="btn cancel-btn">Close</button>
 			</dialog>
-		</main>
 	</body>
 </html>
