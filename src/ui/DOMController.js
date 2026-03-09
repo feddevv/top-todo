@@ -38,6 +38,41 @@ export const DOMController = (function() {
             }
         })
 
+        tasksContainer.addEventListener('click', (e) => {
+            const taskEl = e.target.closest('.task')
+            if (!taskEl || e.target.closest('.task-edit') || e.target.closest('.task-delete') || e.target.closest('input[type="checkbox"]')) return
+
+            const project = ProjectManager.getProject(taskEl.dataset.projectId)
+            const task = project.getTask(taskEl.dataset.taskId)
+
+            const existing = document.getElementById('task-dialog')
+            if (existing) existing.remove()
+
+            const dialog = createElement('dialog', {id: 'task-dialog', className: 'task-dialog'})
+
+            const header = createElement('div', {className: 'task-dialog-header'})
+            const title = createElement('h2', {className: 'task-dialog-title', textContent: task.title})
+            const priorityBadge = createElement('span', {className: `task-priority ${task.priority.toLowerCase()}`, textContent: task.priority})
+            header.append(title, priorityBadge)
+
+            const desc = createElement('p', {className: 'task-dialog-description', textContent: task.description || 'No description'})
+
+            const details = createElement('div', {className: 'task-dialog-details'})
+            const dateLabel = createElement('span', {className: 'task-dialog-label', textContent: 'Due Date:'})
+            const dateValue = createElement('span', {textContent: task.dueDate || 'Not set'})
+            const projectLabel = createElement('span', {className: 'task-dialog-label', textContent: 'Project:'})
+            const projectValue = createElement('span', {textContent: project.name})
+            details.append(dateLabel, dateValue, projectLabel, projectValue)
+
+            const closeBtn = createElement('button', {className: 'btn cancel-btn task-dialog-close', textContent: 'Close'})
+            closeBtn.addEventListener('click', () => dialog.close())
+
+            dialog.append(header, desc, details, closeBtn)
+            document.body.appendChild(dialog)
+            dialog.showModal()
+            dialog.addEventListener('close', () => dialog.remove())
+        })
+
         addTask.addEventListener('click', (e) => {
             const form = document.querySelector('.add-task-form')
             form.classList.toggle('hidden')
