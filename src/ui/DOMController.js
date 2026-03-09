@@ -186,6 +186,7 @@ export const DOMController = (function() {
                     
                     ProjectManager.deleteProject(el.id)
                     if (el.id === currentProjectId || currentProjectId === 'default') {
+                        currentProjectId = 'default'
                         renderAllTasks(ProjectManager.getProjects())
                         renderHeadline('Default')
                     }

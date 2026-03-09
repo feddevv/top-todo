@@ -35,5 +35,7 @@ export default class Project {
     }
 
     getTask(taskId) {
+        const task = this.#tasks.find(task => task.id === taskId)
+        return task
     }
 }
