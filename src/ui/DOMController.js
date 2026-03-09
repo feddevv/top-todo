@@ -1,9 +1,11 @@
 import { ProjectManager } from "../modules/ProjectManager.js"
+import Task from "../modules/Task.js"
 
 export const DOMController = (function() {
     function initEventListeners() {
         const addTask = document.querySelector('.add-task-btn')
         const sidebarUl = document.querySelector('.sidebar nav ul')
+        const submitTaskForm = document.querySelector('.add-task-form')
 
         addTask.addEventListener('click', (e) => {
             const form = document.querySelector('.add-task-form')
@@ -16,6 +18,7 @@ export const DOMController = (function() {
             if (!li) return
 
             const projectId = li.dataset.projectId
+            submitTaskForm.dataset.projectId = projectId
             if (projectId === 'default') {
                 const projects = ProjectManager.getProjects()
                 let tasks = projects.flatMap(el => el.tasks)
@@ -26,6 +29,26 @@ export const DOMController = (function() {
 
             const project = ProjectManager.getProject(projectId)
             renderTasks(project.tasks)
+        })
+
+        submitTaskForm.addEventListener('submit', (e) => {
+            e.preventDefault()
+
+            const data = Object.fromEntries(new FormData(e.target))
+            const project = ProjectManager.getProject(data.project)
+            project.addTask(new Task(data['task-title'], data['task-description'], data['due-date'], data.priority))
+            
+            const currentProjectId = e.target.dataset.projectId
+            // If this is the default project, render everything
+            if (currentProjectId === 'default') {
+                renderAllTasks(ProjectManager.getProjects())
+            }
+            else {
+                const currentProject = ProjectManager.getProject(currentProjectId)
+                renderTasks(currentProject.tasks)
+            }
+
+            renderProjects(ProjectManager.getProjects())
         })
     }
 
@@ -41,6 +64,7 @@ export const DOMController = (function() {
 
     function renderProjects(projects) {
         const ul = document.querySelector('.sidebar nav ul')
+        ul.innerHTML = ''
         let wholeQuantity = 0
         projects.forEach(el => {
             wholeQuantity += el.tasks.length
@@ -62,6 +86,11 @@ export const DOMController = (function() {
             li.append(icon, name, quantity)
             ul.appendChild(li)
         })
+    }
+
+    function renderAllTasks(projects) {
+        const tasks = projects.flatMap(el => el.tasks)
+        renderTasks(tasks)
     }
 
     function renderTasks(tasks) {

@@ -39,6 +39,5 @@ function addSeedData(manager) {
 }
 
 addSeedData(ProjectManager)
-console.log(ProjectManager.getProjects())
 
 DOMController.init()
