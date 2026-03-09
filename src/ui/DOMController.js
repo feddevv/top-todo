@@ -19,7 +19,8 @@ export const DOMController = (function() {
         tasksContainer.addEventListener('click', (e) => {
             const task = e.target.closest('.task')
             if (e.target.matches('.task-edit') && task) {
-                console.log('1')
+                const dialogEdit = document.querySelector('#dialog-task-edit')
+                dialogEdit.showModal()
             }
             else if (e.target.matches('.task-delete') && task) {
                 const taskId = task.dataset.taskId

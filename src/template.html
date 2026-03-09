@@ -79,6 +79,24 @@
 			<section class="tasks-container">
 				
 			</section>
+
+			<dialog id="dialog-task-edit">
+				<form method="dialog" id="edit-form">
+					<input type="text" name="task-edit-title" id="task-edit-title">
+					<textarea name="task-edit-description" id="task-edit-description"></textarea>
+					<input type="date" name="task-edit-due-date" id="task-edit-due-date">
+
+					<select name="task-edit-priority" id="task-edit-priority">
+						<option value="low">Low</option>
+						<option value="Medium">Medium</option>
+						<option value="High">High</option>
+					</select>
+
+				</form>
+				
+				<button class="submit-btn btn" form="edit-form">Submit</button>
+				<button commandfor="dialog-task-edit" command="close" class="btn cancel-btn">Close</button>
+			</dialog>
 		</main>
 	</body>
 </html>
