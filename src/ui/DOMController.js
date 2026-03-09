@@ -7,6 +7,7 @@ export const DOMController = (function() {
         const addTask = document.querySelector('.add-task-btn')
         const sidebarUl = document.querySelector('.sidebar nav ul')
         const submitTaskForm = document.querySelector('.add-task-form')
+        const cancelTaskBtn = document.querySelector('.add-task-form .cancel-btn')
         const addProjectBtn = document.querySelector('.add-project-btn')
         const newProjectDialog = document.querySelector('.new-project-dialog')
         const dialogCancelBtn = document.querySelector('.dialog-cancel-btn')
@@ -72,6 +73,11 @@ export const DOMController = (function() {
             }
 
             renderProjects(ProjectManager.getProjects())
+        })
+
+        cancelTaskBtn.addEventListener('click', (e) => {
+            submitTaskForm.reset()
+            submitTaskForm.classList.add('hidden')
         })
     }
 
