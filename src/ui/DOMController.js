@@ -1,11 +1,16 @@
 import { ProjectManager } from "../modules/ProjectManager.js"
 import Task from "../modules/Task.js"
+import Project from "../modules/Project.js"
 
 export const DOMController = (function() {
     function initEventListeners() {
         const addTask = document.querySelector('.add-task-btn')
         const sidebarUl = document.querySelector('.sidebar nav ul')
         const submitTaskForm = document.querySelector('.add-task-form')
+        const addProjectBtn = document.querySelector('.add-project-btn')
+        const newProjectDialog = document.querySelector('.new-project-dialog')
+        const dialogCancelBtn = document.querySelector('.dialog-cancel-btn')
+        const newProjectForm = document.querySelector('.new-project-form')
 
         addTask.addEventListener('click', (e) => {
             const form = document.querySelector('.add-task-form')
@@ -29,6 +34,24 @@ export const DOMController = (function() {
 
             const project = ProjectManager.getProject(projectId)
             renderTasks(project.tasks)
+        })
+
+        addProjectBtn.addEventListener('click', () => {
+            newProjectDialog.showModal()
+        })
+
+        dialogCancelBtn.addEventListener('click', () => {
+            newProjectDialog.close()
+        })
+
+        newProjectForm.addEventListener('submit', (e) => {
+            const name = newProjectForm.querySelector('#project-name').value.trim()
+            if (!name) return
+
+            const project = new Project(name)
+            ProjectManager.addProject(project)
+            renderProjects(ProjectManager.getProjects())
+            newProjectForm.reset()
         })
 
         submitTaskForm.addEventListener('submit', (e) => {

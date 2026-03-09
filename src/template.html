@@ -21,6 +21,17 @@
 			</nav>
 		</aside>
 
+		<dialog class="new-project-dialog">
+			<form class="new-project-form" method="dialog">
+				<h2>New Project</h2>
+				<input type="text" name="project-name" id="project-name" placeholder="Project name" required>
+				<div class="form-buttons">
+					<button type="submit" class="btn submit-btn">Create</button>
+					<button type="button" class="btn cancel-btn dialog-cancel-btn">Cancel</button>
+				</div>
+			</form>
+		</dialog>
+
 		<main>
 			<div class="main-headline">
 				<h2>Default</h2>
@@ -54,7 +65,7 @@
 					<div class="input-cont">
 						<label for="select-project">Project</label>
 						<select name="project" id="select-project">
-							
+
 						</select>
 					</div>
 				</div>
