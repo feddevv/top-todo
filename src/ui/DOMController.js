@@ -44,10 +44,15 @@ export const DOMController = (function() {
 
     function renderProjects(projects) {
         const ul = document.querySelector('.sidebar nav ul')
+        let wholeQuantity = 0
+        projects.forEach(el => {
+            wholeQuantity += el.tasks.length
+        })
+
         ul.innerHTML = `<li data-project-id="default" class="sidebar-item" tabindex="0">
 						<span class="sidebar-icon"></span>
 						<span class="sidebar-name">Default</span>
-						<span class="sidebar-quantity">3</span>
+						<span class="sidebar-quantity">${wholeQuantity}</span>
 					</li>`
 
         projects.forEach(el => {
