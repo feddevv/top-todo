@@ -27,7 +27,14 @@ export const DOMController = (function() {
 
                 const project = ProjectManager.getProject(projectId)
                 project.deleteTask(taskId)
-                renderTasks(project.tasks)
+                if (currentProjectId === 'default') {
+                    renderAllTasks(ProjectManager.getProjects())
+                    renderProjects(ProjectManager.getProjects())
+                    return
+                }
+                const currentProject = ProjectManager.getProject(currentProjectId)
+                renderTasks(currentProject.tasks)
+                renderProjects(ProjectManager.getProjects())
             }
         })
 
