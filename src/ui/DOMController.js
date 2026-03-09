@@ -100,7 +100,7 @@ export const DOMController = (function() {
             currentProjectId = projectId
             if (projectId === 'default') {
                 const projects = ProjectManager.getProjects()
-                document.querySelector('.main-headline h2').textContent = 'Default'
+                renderHeadline('Default')
 
                 let tasks = projects.flatMap(el => el.tasks)
 
@@ -109,7 +109,7 @@ export const DOMController = (function() {
             }
 
             const project = ProjectManager.getProject(projectId)
-            document.querySelector('.main-headline h2').textContent = project.name
+            renderHeadline(project.name)
 
             renderTasks(project.tasks)
         })
@@ -185,7 +185,10 @@ export const DOMController = (function() {
                     e.stopPropagation()
                     
                     ProjectManager.deleteProject(el.id)
-                    if (currentProjectId === el.id) renderAllTasks(ProjectManager.getProjects())
+                    if (el.id === currentProjectId || currentProjectId === 'default') {
+                        renderAllTasks(ProjectManager.getProjects())
+                        renderHeadline('Default')
+                    }
                     renderProjects(ProjectManager.getProjects())
                 })
             }
@@ -201,6 +204,10 @@ export const DOMController = (function() {
             li.append(...append)
             ul.appendChild(li)
         })
+    }
+
+    function renderHeadline(name) {
+        document.querySelector('.main-headline h2').textContent = name
     }
 
     function renderAllTasks(projects) {
