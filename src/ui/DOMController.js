@@ -15,16 +15,26 @@ export const DOMController = (function() {
         const dialogCancelBtn = document.querySelector('.dialog-cancel-btn')
         const newProjectForm = document.querySelector('.new-project-form')
         const tasksContainer = document.querySelector('.tasks-container')
+        const dialogEdit = document.getElementById('dialog-task-edit')
+        const formEdit = document.querySelector('#dialog-task-edit form')
 
         tasksContainer.addEventListener('click', (e) => {
-            const task = e.target.closest('.task')
-            if (e.target.matches('.task-edit') && task) {
-                const dialogEdit = document.querySelector('#dialog-task-edit')
+            const targetTask = e.target.closest('.task')
+            if (e.target.matches('.task-edit') && targetTask) {
+                const project = ProjectManager.getProject(targetTask.dataset.projectId)
+                const task = project.getTask(targetTask.dataset.taskId)
+                dialogEdit.dataset.taskId = targetTask.dataset.taskId
+                dialogEdit.dataset.projectId = targetTask.dataset.projectId
+
+                document.getElementById('task-edit-title').value = task.title
+                document.getElementById('task-edit-description').value = task.description
+                document.getElementById('task-edit-due-date').value = task.dueDate
+                document.getElementById('task-edit-priority').value = task.priority.toLowerCase()
                 dialogEdit.showModal()
             }
-            else if (e.target.matches('.task-delete') && task) {
-                const taskId = task.dataset.taskId
-                const projectId = task.dataset.projectId
+            else if (e.target.matches('.task-delete') && targetTask) {
+                const taskId = targetTask.dataset.taskId
+                const projectId = targetTask.dataset.projectId
 
                 const project = ProjectManager.getProject(projectId)
                 project.deleteTask(taskId)
@@ -39,40 +49,23 @@ export const DOMController = (function() {
             }
         })
 
-        tasksContainer.addEventListener('click', (e) => {
-            const taskEl = e.target.closest('.task')
-            if (!taskEl || e.target.closest('.task-edit') || e.target.closest('.task-delete') || e.target.closest('input[type="checkbox"]')) return
+        formEdit.addEventListener('submit', (e) => {
+            const data = Object.fromEntries(new FormData(e.target))
+            const taskId = dialogEdit.dataset.taskId
+            const projectId = dialogEdit.dataset.projectId
+            const project = ProjectManager.getProject(projectId)
 
-            const project = ProjectManager.getProject(taskEl.dataset.projectId)
-            const task = project.getTask(taskEl.dataset.taskId)
+            project.editTask(taskId, data['task-edit-title'], data['task-edit-description'], data['task-edit-due-date'], data['task-edit-priority'])
+            
+            dialogEdit.removeAttribute('data-task-id')
+            dialogEdit.removeAttribute('data-project-id')
+            if (currentProjectId === 'default') {
+                return renderAllTasks(ProjectManager.getProjects())
+            }
 
-            const existing = document.getElementById('task-dialog')
-            if (existing) existing.remove()
-
-            const dialog = createElement('dialog', {id: 'task-dialog', className: 'task-dialog'})
-
-            const header = createElement('div', {className: 'task-dialog-header'})
-            const title = createElement('h2', {className: 'task-dialog-title', textContent: task.title})
-            const priorityBadge = createElement('span', {className: `task-priority ${task.priority.toLowerCase()}`, textContent: task.priority})
-            header.append(title, priorityBadge)
-
-            const desc = createElement('p', {className: 'task-dialog-description', textContent: task.description || 'No description'})
-
-            const details = createElement('div', {className: 'task-dialog-details'})
-            const dateLabel = createElement('span', {className: 'task-dialog-label', textContent: 'Due Date:'})
-            const dateValue = createElement('span', {textContent: task.dueDate || 'Not set'})
-            const projectLabel = createElement('span', {className: 'task-dialog-label', textContent: 'Project:'})
-            const projectValue = createElement('span', {textContent: project.name})
-            details.append(dateLabel, dateValue, projectLabel, projectValue)
-
-            const closeBtn = createElement('button', {className: 'btn cancel-btn task-dialog-close', textContent: 'Close'})
-            closeBtn.addEventListener('click', () => dialog.close())
-
-            dialog.append(header, desc, details, closeBtn)
-            document.body.appendChild(dialog)
-            dialog.showModal()
-            dialog.addEventListener('close', () => dialog.remove())
+            renderTasks(project.tasks)
         })
+
 
         addTask.addEventListener('click', (e) => {
             const form = document.querySelector('.add-task-form')

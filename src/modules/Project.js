@@ -19,6 +19,17 @@ export default class Project {
         })
     }
 
+    editTask(taskId, title, description, dueDate, priority) {
+        this.#tasks.forEach(task => {
+            if (task.id === taskId) {
+                task.title = title
+                task.description = description
+                task.dueDate = dueDate
+                task.priority = priority
+            }
+        })
+    }
+
     get tasks() {
         return this.#tasks
     }
