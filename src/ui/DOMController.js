@@ -8,6 +8,7 @@ export const DOMController = (function() {
         addTask.addEventListener('click', (e) => {
             const form = document.querySelector('.add-task-form')
             form.classList.toggle('hidden')
+            renderSelectProjects(ProjectManager.getProjects())
         })
 
         sidebarUl.addEventListener('click', (e) => {
@@ -97,11 +98,16 @@ export const DOMController = (function() {
         })
     }
 
+    function init() {
+        initEventListeners()
+        renderProjects(ProjectManager.getProjects())
+
+        const defaultProject = document.querySelector('.sidebar ul li[data-project-id="default"]')
+        defaultProject.click()
+    }
+
     return {
-        initEventListeners,
-        renderSelectProjects,
-        renderProjects,
-        renderTasks
+        init,
     }
 }) ()
 
