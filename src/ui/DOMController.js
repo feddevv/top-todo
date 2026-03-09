@@ -2,6 +2,8 @@ import { ProjectManager } from "../modules/ProjectManager.js"
 import Task from "../modules/Task.js"
 import Project from "../modules/Project.js"
 
+let currentProjectId = 'default'
+
 export const DOMController = (function() {
     function initEventListeners() {
         const addTask = document.querySelector('.add-task-btn')
@@ -12,6 +14,22 @@ export const DOMController = (function() {
         const newProjectDialog = document.querySelector('.new-project-dialog')
         const dialogCancelBtn = document.querySelector('.dialog-cancel-btn')
         const newProjectForm = document.querySelector('.new-project-form')
+        const tasksContainer = document.querySelector('.tasks-container')
+
+        tasksContainer.addEventListener('click', (e) => {
+            const task = e.target.closest('.task')
+            if (e.target.matches('.task-edit') && task) {
+                console.log('1')
+            }
+            else if (e.target.matches('.task-delete') && task) {
+                const taskId = task.dataset.taskId
+                const projectId = task.dataset.projectId
+
+                const project = ProjectManager.getProject(projectId)
+                project.deleteTask(taskId)
+                renderTasks(project.tasks)
+            }
+        })
 
         addTask.addEventListener('click', (e) => {
             const form = document.querySelector('.add-task-form')
@@ -24,7 +42,7 @@ export const DOMController = (function() {
             if (!li) return
 
             const projectId = li.dataset.projectId
-            submitTaskForm.dataset.projectId = projectId
+            currentProjectId = projectId
             if (projectId === 'default') {
                 const projects = ProjectManager.getProjects()
                 let tasks = projects.flatMap(el => el.tasks)
@@ -61,10 +79,9 @@ export const DOMController = (function() {
             const data = Object.fromEntries(new FormData(e.target))
             const project = ProjectManager.getProject(data.project)
             project.addTask(new Task(data['task-title'], data['task-description'], data['due-date'], data.priority))
-            
-            const currentProjectId = e.target.dataset.projectId
             // If this is the default project, render everything
             if (currentProjectId === 'default') {
+                console.log(currentProjectId)
                 renderAllTasks(ProjectManager.getProjects())
             }
             else {
@@ -127,7 +144,7 @@ export const DOMController = (function() {
         tasksContainer.innerHTML = ''
 
         tasks.forEach(el => {
-            const task = createElement('div', {className: `task ${el.priority.toLowerCase()}`})
+            const task = createElement('div', {className: `task ${el.priority.toLowerCase()}`, 'data-task-id': el.id, 'data-project-id': el.projectId})
 
             const taskLeft = createElement('div', {className: 'task-left'})
             const checkBoxLeft = createElement('input', {type: 'checkbox'})
