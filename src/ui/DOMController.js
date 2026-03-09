@@ -178,7 +178,7 @@ export const DOMController = (function() {
         projects.forEach(el => {
             const li = createElement('li', {className: 'sidebar-item', tabIndex: 0, 'data-project-id': el.id})
 
-            const icon = createElement('span', {className: 'sidebar-icon'})
+            const icon = createElement('span', {className: 'sidebar-icon', textContent: '\u2715'})
 
             const name = createElement('span', {className: 'sidebar-name', textContent: el.name})
 
@@ -188,7 +188,7 @@ export const DOMController = (function() {
             }
             else quantity = createElement('span', {className: 'sidebar-quantity', textContent: el.tasks.length})
 
-            li.append(icon, name, quantity)
+            li.append(quantity, name, icon)
             ul.appendChild(li)
         })
     }

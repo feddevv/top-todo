@@ -130,10 +130,16 @@ ul {
 }
 
 .sidebar-icon {
-    width: 4px;
-    height: 4px;
-    background: var(--accent);
-    border-radius: 50%;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    line-height: 1;
+    margin-left: auto;
+
+    transition: color .1s;
+}
+
+.sidebar-icon:hover {
+    color: var(--action-delete);
 }
 
 .sidebar-name {
@@ -143,7 +149,6 @@ ul {
 .sidebar-quantity {
     color: var(--text-subtle);
     font-size: .9rem;
-    margin-left: auto;
     background-color: var(--sidebar-active);
 
     width: 20px;
