@@ -355,6 +355,15 @@ main {
     color: var(--text-muted);
 }
 
+.task.done {
+    opacity: .5;
+}
+
+.task.done .task-info-title {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
+
 .task-right {
     display: flex;
     align-items: center;

@@ -20,6 +20,17 @@ export const DOMController = (function() {
         const formEdit = document.querySelector('#dialog-task-edit form')
         const dialogDetail = document.getElementById('dialog-task-detail')
 
+        tasksContainer.addEventListener('change', (e) => {
+            const targetTask = e.target.closest('.task')
+            if (e.target.matches('input[type="checkbox"]') && targetTask) {
+                const project = ProjectManager.getProject(targetTask.dataset.projectId)
+                const task = project.getTask(targetTask.dataset.taskId)
+
+                task.toggleIsDone()
+                targetTask.classList.toggle('done')
+            }
+        })
+
         tasksContainer.addEventListener('click', (e) => {
             const targetTask = e.target.closest('.task')
             if (e.target.matches('.task-edit') && targetTask) {
@@ -222,10 +233,10 @@ export const DOMController = (function() {
         tasksContainer.innerHTML = ''
 
         tasks.forEach(el => {
-            const task = createElement('div', {className: `task ${el.priority.toLowerCase()}`, 'data-task-id': el.id, 'data-project-id': el.projectId})
+            const task = createElement('div', {className: `task ${el.priority.toLowerCase()}${el.isDone ? ' done' : ''}`, 'data-task-id': el.id, 'data-project-id': el.projectId})
 
             const taskLeft = createElement('div', {className: 'task-left'})
-            const checkBoxLeft = createElement('input', {type: 'checkbox'})
+            const checkBoxLeft = createElement('input', {type: 'checkbox', checked: el.isDone})
             const taskInfoLeft = createElement('div', {className: 'task-info'})
             const title = createElement('p', {className: 'task-info-title', textContent: el.title})
             const description = createElement('p', {className: 'task-info-description', textContent: el.description})
