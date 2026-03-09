@@ -152,6 +152,7 @@ export const DOMController = (function() {
             const project = new Project(name)
             ProjectManager.addProject(project)
             renderProjects(ProjectManager.getProjects())
+            renderSelectProjects(ProjectManager.getProjects())
             newProjectForm.reset()
         })
 
@@ -187,6 +188,7 @@ export const DOMController = (function() {
 
     function renderSelectProjects(projects) {
         const select = document.getElementById('select-project')
+        select.innerHTML = ''
 
         projects.forEach(el => {
             const option = createElement('option', {value: el.id, textContent: el.name})
