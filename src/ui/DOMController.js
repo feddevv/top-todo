@@ -100,6 +100,8 @@ export const DOMController = (function() {
             currentProjectId = projectId
             if (projectId === 'default') {
                 const projects = ProjectManager.getProjects()
+                document.querySelector('.main-headline h2').textContent = 'Default'
+
                 let tasks = projects.flatMap(el => el.tasks)
 
                 renderTasks(tasks)
@@ -107,6 +109,8 @@ export const DOMController = (function() {
             }
 
             const project = ProjectManager.getProject(projectId)
+            document.querySelector('.main-headline h2').textContent = project.name
+
             renderTasks(project.tasks)
         })
 
