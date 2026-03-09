@@ -17,8 +17,12 @@ export const DOMController = (function() {
             const projectId = li.dataset.projectId
             if (projectId === 'default') {
                 const projects = ProjectManager.getProjects()
-                projects.forEach(el => renderTasks(el.tasks))
+                let tasks = []
+                projects.forEach(el => {
+                    tasks = [...tasks, ...el.tasks]
+                })
 
+                renderTasks(tasks)
                 return
             }
 
