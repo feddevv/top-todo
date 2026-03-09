@@ -2,9 +2,9 @@ import { ProjectManager } from "../modules/ProjectManager.js"
 import Task from "../modules/Task.js"
 import Project from "../modules/Project.js"
 
-let currentProjectId = 'default'
 
 export const DOMController = (function() {
+    let currentProjectId = 'default'
     function initEventListeners() {
         const addTask = document.querySelector('.add-task-btn')
         const sidebarUl = document.querySelector('.sidebar nav ul')
