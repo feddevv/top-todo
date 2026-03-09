@@ -18,10 +18,7 @@ export const DOMController = (function() {
             const projectId = li.dataset.projectId
             if (projectId === 'default') {
                 const projects = ProjectManager.getProjects()
-                let tasks = []
-                projects.forEach(el => {
-                    tasks = [...tasks, ...el.tasks]
-                })
+                let tasks = projects.flatMap(el => el.tasks)
 
                 renderTasks(tasks)
                 return
@@ -34,7 +31,6 @@ export const DOMController = (function() {
 
     function renderSelectProjects(projects) {
         const select = document.getElementById('select-project')
-        select.innerHTML = '<option selected value="default">Default</option>'
 
         projects.forEach(el => {
             const option = createElement('option', {value: el.id, textContent: el.name})
@@ -50,12 +46,6 @@ export const DOMController = (function() {
             wholeQuantity += el.tasks.length
         })
 
-        ul.innerHTML = `<li data-project-id="default" class="sidebar-item" tabindex="0">
-						<span class="sidebar-icon"></span>
-						<span class="sidebar-name">Default</span>
-						<span class="sidebar-quantity">${wholeQuantity}</span>
-					</li>`
-
         projects.forEach(el => {
             const li = createElement('li', {className: 'sidebar-item', tabIndex: 0, 'data-project-id': el.id})
 
@@ -63,7 +53,11 @@ export const DOMController = (function() {
 
             const name = createElement('span', {className: 'sidebar-name', textContent: el.name})
 
-            const quantity = createElement('span', {className: 'sidebar-quantity', textContent: el.tasks.length})
+            let quantity;
+            if (el.id === 'default') {
+                quantity = createElement('span', {className: 'sidebar-quantity', textContent: wholeQuantity})
+            }
+            else quantity = createElement('span', {className: 'sidebar-quantity', textContent: el.tasks.length})
 
             li.append(icon, name, quantity)
             ul.appendChild(li)
@@ -101,7 +95,7 @@ export const DOMController = (function() {
     function init() {
         initEventListeners()
         renderProjects(ProjectManager.getProjects())
-
+        
         const defaultProject = document.querySelector('.sidebar ul li[data-project-id="default"]')
         defaultProject.click()
     }

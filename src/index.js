@@ -4,6 +4,9 @@ import Project from './modules/Project.js';
 import Task from './modules/Task.js';
 import { DOMController } from './ui/DOMController.js';
 
+const defaultProject = new Project('Default', 'default')
+ProjectManager.addProject(defaultProject)
+
 function addSeedData(manager) {
     const project0 = new Project('DNU')
     const tasks0 = [
@@ -36,7 +39,6 @@ function addSeedData(manager) {
 }
 
 addSeedData(ProjectManager)
-
 console.log(ProjectManager.getProjects())
 
 DOMController.init()

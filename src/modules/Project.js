@@ -1,8 +1,8 @@
 export default class Project {
     #tasks = []
 
-    constructor(name) {
-        this.id = crypto.randomUUID()
+    constructor(name, id = crypto.randomUUID()) {
+        this.id = id
         this.name = name
     }
 
