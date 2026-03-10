@@ -22,10 +22,19 @@ export const ProjectManager = (function() {
         return projects.find(el => el.id === projectId)
     }
 
+    function delegateTask(taskId, from, to) {
+        const fromProject = getProject(from)
+        const toProject = getProject(to)
+        const task = fromProject.getTask(taskId)
+        fromProject.deleteTask(taskId)
+        toProject.addTask(task)
+    }
+
     return {
         addProject,
         deleteProject,
         getProjects,
-        getProject
+        getProject,
+        delegateTask
     }
 })()

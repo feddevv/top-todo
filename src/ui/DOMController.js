@@ -47,6 +47,7 @@ export const DOMController = (function() {
         const formEdit = document.querySelector('#dialog-task-edit form')
         const tasksContainer = document.querySelector('.tasks-container')
         
+        // Edit task listener
         tasksContainer.addEventListener('click', (e) => {
             const targetTask = e.target.closest('.task')
             if (e.target.matches('.task-edit') && targetTask) {
@@ -59,9 +60,21 @@ export const DOMController = (function() {
                 document.getElementById('task-edit-description').value = task.description
                 document.getElementById('task-edit-due-date').value = task.dueDate
                 document.getElementById('task-edit-priority').value = task.priority.toLowerCase()
+
+                const selectEditProject = document.getElementById('task-edit-project')
+                selectEditProject.innerHTML = ''
+                ProjectManager.getProjects().forEach(el => {
+                    const option = createElement('option', {value: el.id, textContent: el.name, selected: el.id === project.id})
+                    selectEditProject.appendChild(option)
+                })
                 dialogEdit.showModal()
             }
-            else if (e.target.matches('.task-delete') && targetTask) {
+        })
+
+        // Delete task listener
+        tasksContainer.addEventListener('click', (e) => {
+            const targetTask = e.target.closest('.task')
+            if (e.target.matches('.task-delete') && targetTask) {
                 const taskId = targetTask.dataset.taskId
                 const projectId = targetTask.dataset.projectId
 
@@ -82,13 +95,21 @@ export const DOMController = (function() {
             const data = Object.fromEntries(new FormData(e.target))
             const taskId = dialogEdit.dataset.taskId
             const projectId = dialogEdit.dataset.projectId
-            const project = ProjectManager.getProject(projectId)
+            let project = ProjectManager.getProject(projectId)
 
-            project.editTask(taskId, data['task-edit-title'], data['task-edit-description'], data['task-edit-due-date'], data['task-edit-priority'])
+            if (data['task-edit-project'] !== projectId) {
+                const toProjectId = data['task-edit-project']
+                ProjectManager.delegateTask(taskId, projectId, toProjectId)
+                renderProjects(ProjectManager.getProjects())
+
+                project = ProjectManager.getProject(toProjectId)
+            }
+
+            project.editTask(taskId, data['task-edit-title'], data['task-edit-description'], data['task-edit-due-date'], data['task-edit-priority'], data['task-edit-project'])
             
             dialogEdit.removeAttribute('data-task-id')
             dialogEdit.removeAttribute('data-project-id')
-            if (currentProjectId === 'default') {
+            if (currentProjectId === 'default' || project.id === 'default') {
                 return renderAllTasks(ProjectManager.getProjects())
             }
 
@@ -103,7 +124,6 @@ export const DOMController = (function() {
 
         addTask.addEventListener('click', (e) => {
             submitTaskForm.classList.toggle('hidden')
-            renderSelectProjects(ProjectManager.getProjects())
         })
 
         submitTaskForm.addEventListener('submit', (e) => {
@@ -151,6 +171,7 @@ export const DOMController = (function() {
 
             const project = new Project(name)
             ProjectManager.addProject(project)
+
             renderProjects(ProjectManager.getProjects())
             renderSelectProjects(ProjectManager.getProjects())
             newProjectForm.reset()
@@ -163,12 +184,9 @@ export const DOMController = (function() {
             const projectId = li.dataset.projectId
             currentProjectId = projectId
             if (projectId === 'default') {
-                const projects = ProjectManager.getProjects()
                 renderHeadline('Default')
-
-                let tasks = projects.flatMap(el => el.tasks)
-
-                renderTasks(tasks)
+                renderAllTasks(ProjectManager.getProjects())
+                
                 return
             }
 
@@ -277,6 +295,7 @@ export const DOMController = (function() {
     function init() {
         initEventListeners()
         renderProjects(ProjectManager.getProjects())
+        renderSelectProjects(ProjectManager.getProjects())
         
         const defaultProject = document.querySelector('.sidebar ul li[data-project-id="default"]')
         defaultProject.click()
