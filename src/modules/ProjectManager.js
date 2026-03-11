@@ -1,5 +1,8 @@
+import { storage } from "../data/StorageController.js"
+import { rehydrate } from "../utils/rehydration.js"
+
 export const ProjectManager = (function() {
-    const projects = []
+    const projects = rehydrate() || []
 
     function addProject(project) {
         projects.push(project)

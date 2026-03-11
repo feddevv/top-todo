@@ -1,7 +1,7 @@
 import { ProjectManager } from "../modules/ProjectManager.js"
 import Task from "../modules/Task.js"
 import Project from "../modules/Project.js"
-
+import { storage } from "../data/StorageController.js"
 
 export const DOMController = (function() {
     let currentProjectId = 'default'
@@ -18,6 +18,7 @@ export const DOMController = (function() {
                 const task = project.getTask(targetTask.dataset.taskId)
 
                 task.toggleIsDone()
+                storage.save('projects', ProjectManager.getProjects())
                 targetTask.classList.toggle('done')
             }
         })
@@ -79,7 +80,10 @@ export const DOMController = (function() {
                 const projectId = targetTask.dataset.projectId
 
                 const project = ProjectManager.getProject(projectId)
+
                 project.deleteTask(taskId)
+                storage.save('projects', ProjectManager.getProjects())
+
                 if (currentProjectId === 'default') {
                     renderAllTasks(ProjectManager.getProjects())
                     renderProjects(ProjectManager.getProjects())
@@ -103,9 +107,11 @@ export const DOMController = (function() {
                 renderProjects(ProjectManager.getProjects())
 
                 project = ProjectManager.getProject(toProjectId)
+                renderHeadline(project.name)
             }
 
             project.editTask(taskId, data['task-edit-title'], data['task-edit-description'], data['task-edit-due-date'], data['task-edit-priority'], data['task-edit-project'])
+            storage.save('projects', ProjectManager.getProjects())
             
             dialogEdit.removeAttribute('data-task-id')
             dialogEdit.removeAttribute('data-project-id')
@@ -142,6 +148,7 @@ export const DOMController = (function() {
             }
 
             renderProjects(ProjectManager.getProjects())
+            storage.save('projects', ProjectManager.getProjects())
         })
 
         cancelTaskBtn.addEventListener('click', (e) => {
@@ -171,6 +178,7 @@ export const DOMController = (function() {
 
             const project = new Project(name)
             ProjectManager.addProject(project)
+            storage.save('projects', ProjectManager.getProjects())
 
             renderProjects(ProjectManager.getProjects())
             renderSelectProjects(ProjectManager.getProjects())
@@ -233,6 +241,7 @@ export const DOMController = (function() {
                     e.stopPropagation()
                     
                     ProjectManager.deleteProject(el.id)
+                    storage.save('projects', ProjectManager.getProjects())
                     if (el.id === currentProjectId || currentProjectId === 'default') {
                         currentProjectId = 'default'
                         renderAllTasks(ProjectManager.getProjects())

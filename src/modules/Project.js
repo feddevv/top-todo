@@ -33,11 +33,11 @@ export default class Project {
     }
 
     get tasks() {
-        return this.#tasks
+        return this.tasks
     }
 
     getTask(taskId) {
-        const task = this.#tasks.find(task => task.id === taskId)
+        const task = this.tasks.find(task => task.id === taskId)
         return task
     }
 }
