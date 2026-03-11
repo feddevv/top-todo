@@ -1,5 +1,5 @@
 export default class Project {
-    #tasks = []
+    tasks = []
 
     constructor(name, id = crypto.randomUUID()) {
         this.id = id
@@ -7,20 +7,20 @@ export default class Project {
     }
 
     addTask(task) {
-        this.#tasks.unshift(task)
+        this.tasks.unshift(task)
     }
 
     deleteTask(taskId) {
-        this.#tasks.forEach((el, index) => {
+        this.tasks.forEach((el, index) => {
             if (el.id === taskId) {
-                this.#tasks.splice(index, 1)
+                this.tasks.splice(index, 1)
                 return true
             }
         })
     }
 
     editTask(taskId, title, description, dueDate, priority, projectId) {
-        this.#tasks.forEach(task => {
+        this.tasks.forEach(task => {
             if (task.id === taskId) {
                 task.title = title
                 task.description = description
